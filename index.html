@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ripasso Spagnolo — Teoria + Quiz con Feedback</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#101a2e; --text:#e8eefc; --muted:#a8b3d6;
+      --line:rgba(255,255,255,.12);
+      --ok:#35d07f; --bad:#ff5b6e; --warn:#ffd166;
+      --btn:#1f3bff; --btn2:#23304f;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 30% 10%, rgba(31,59,255,.25), transparent 60%),
+                  radial-gradient(900px 600px at 80% 30%, rgba(53,208,127,.18), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.35;
+    }
+    header{padding:24px 16px 10px; max-width:980px; margin:0 auto;}
+    .topbar{display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;}
+    h1{margin:0; font-size:clamp(20px, 3vw, 30px);}
+    .sub{color:var(--muted); margin-top:6px; max-width:72ch;}
+    .wrap{max-width:980px; margin:0 auto; padding:12px 16px 40px;}
+    .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:14px;}
+    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .card h2{margin:0 0 10px; font-size:18px;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted); font-size:12px;
+      background:rgba(255,255,255,.03);
+    }
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .progress{
+      width:100%; height:10px; border-radius:999px; overflow:hidden;
+      border:1px solid var(--line); background:rgba(255,255,255,.04);
+    }
+    .bar{
+      height:100%; width:0%;
+      background: linear-gradient(90deg, rgba(31,59,255,.9), rgba(53,208,127,.9));
+      transition: width .35s ease;
+    }
+    .btns{display:flex; gap:10px; flex-wrap:wrap;}
+    button{
+      border:0; cursor:pointer; color:var(--text);
+      padding:10px 12px; border-radius:12px;
+      background: var(--btn2);
+      border:1px solid var(--line);
+      transition: transform .06s ease, filter .2s ease, background .2s ease;
+      font-weight:600;
+    }
+    button.primary{background: var(--btn);}
+    button:active{transform: scale(.99);}
+    button[disabled]{opacity:.5; cursor:not-allowed;}
+    .tiny{font-size:12px; color:var(--muted);}
+    .theory-title{font-size:20px; margin:0 0 6px;}
+    .kicker{color:var(--muted); margin:0 0 12px;}
+    .box{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(0,0,0,.18);
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin:0;
+      color:#dfe7ff;
+    }
+    ul{margin:10px 0 0 18px; color:var(--muted);}
+    .hl{color:var(--text); font-weight:700;}
+    .quiz-q{margin:0 0 10px; font-size:18px;}
+    .options{display:grid; gap:10px; margin-top:12px;}
+    .opt{
+      text-align:left;
+      padding:12px;
+      border-radius:14px;
+      background: rgba(255,255,255,.03);
+      border:1px solid var(--line);
+    }
+    .opt.correct{border-color: rgba(53,208,127,.7); background: rgba(53,208,127,.08);}
+    .opt.wrong{border-color: rgba(255,91,110,.65); background: rgba(255,91,110,.08);}
+    .opt .label{display:flex; gap:10px; align-items:flex-start;}
+    .badge{
+      min-width:28px; height:28px; display:grid; place-items:center;
+      border-radius:10px; border:1px solid var(--line);
+      background:rgba(255,255,255,.04); color:var(--muted);
+      font-weight:800;
+    }
+    .feedback{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .feedback.ok{border-color: rgba(53,208,127,.6); background: rgba(53,208,127,.08);}
+    .feedback.bad{border-color: rgba(255,91,110,.6); background: rgba(255,91,110,.08);}
+    .divider{height:1px; background:var(--line); margin:12px 0;}
+    .muted{color:var(--muted);}
+    .rightCol .card{position:sticky; top:12px;}
+    @media (max-width:920px){ .rightCol .card{position:static;} }
+    .smallcaps{letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--muted);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Ripasso Spagnolo — Teoria + Quiz (feedback immediato)</h1>
+        <p class="sub">
+          Nel quiz: <span class="hl">clicchi una risposta</span> e ottieni subito
+          <span class="hl">GIUSTO/SBAGLIATO</span> + <span class="hl">spiegazione</span>.
+        </p>
+      </div>
+      <div class="pill" id="modePill">Modalità: Teoria</div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="row">
+            <div>
+              <div class="smallcaps" id="sectionLabel">Teoria</div>
+              <h2 class="theory-title" id="title">—</h2>
+              <p class="kicker" id="kicker">—</p>
+            </div>
+            <div class="pill"><span id="counter">0/0</span></div>
+          </div>
+
+          <div class="progress"><div class="bar" id="bar"></div></div>
+
+          <div class="divider"></div>
+
+          <div id="content"></div>
+
+          <div class="divider"></div>
+
+          <div class="btns">
+            <button id="prevBtn">⬅️ Indietro</button>
+            <button class="primary" id="nextBtn">Avanti ➡️</button>
+            <button id="jumpQuizBtn">Vai al Quiz 🎯</button>
+            <button id="resetBtn">Reset</button>
+          </div>
+
+          <div class="tiny muted" id="note">
+            Nel quiz, il feedback appare subito sotto le opzioni.
+          </div>
+        </div>
+      </div>
+
+      <div class="rightCol">
+        <div class="card">
+          <h2>Dashboard</h2>
+          <div class="box">
+            <p class="muted" style="margin:0 0 8px;">Stato: <span class="hl" id="statusText">Teoria</span></p>
+            <p class="muted" style="margin:0 0 8px;">Teoria: <span class="hl" id="theoryDone">0</span>/<span id="theoryTotal">0</span></p>
+            <p class="muted" style="margin:0 0 8px;">Quiz: <span class="hl" id="score">0</span>/<span id="scoreTotal">0</span></p>
+            <p class="muted" style="margin:0;">Errori: <span class="hl" id="mistakes">0</span></p>
+          </div>
+          <div class="divider"></div>
+          <h2>Come funziona il feedback</h2>
+          <ul>
+            <li>Dopo il click: evidenzia <span class="hl">verde</span> la risposta corretta.</li>
+            <li>Se sbagli: evidenzia <span class="hl">rosso</span> la tua e verde la corretta.</li>
+            <li>Sotto compare la <span class="hl">spiegazione</span> (sempre).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ========= TEORIA =========
+  const theory = [
+    { title:"Presente — desinenze regolari", kicker:"Impara a memoria -AR / -ER / -IR.",
+      html:`<div class="box"><pre class="mono">-AR (hablar): hablo, hablas, habla, hablamos, habláis, hablan
+-ER (comer):  como, comes, come, comemos, coméis, comen
+-IR (vivir):  vivo, vives, vive, vivimos, vivís, viven</pre></div>` },
+    { title:"Ser vs Estar", kicker:"SER = identità; ESTAR = stato/luogo.",
+      html:`<div class="box"><pre class="mono">SER: soy, eres, es, somos, sois, son
+ESTAR: estoy, estás, está, estamos, estáis, están</pre></div>` },
+    { title:"Cambio vocalico", kicker:"E→IE, O→UE, E→I (non cambia in nosotros/vosotros).",
+      html:`<div class="box"><pre class="mono">querer: quiero, quieres, quiere / queremos, queréis / quieren
+poder:  puedo, puedes, puede / podemos, podéis / pueden
+pedir:  pido, pides, pide / pedimos, pedís / piden</pre></div>` },
+    { title:"Verbi tipo GUSTAR", kicker:"me gusta (sing.) / me gustan (plur.).",
+      html:`<div class="box"><pre class="mono">Me gusta el fútbol.
+Me gustan los libros.</pre><p class="muted" style="margin:10px 0 0;">Simili: encantar, doler, interesar, importar, apetecer, quedar, sentar.</p></div>` },
+    { title:"Estar + gerundio", kicker:"Azione in corso: sto facendo.",
+      html:`<div class="box"><pre class="mono">Estoy estudiando.
+Está lloviendo.</pre></div>` },
+    { title:"Indefinido", kicker:"Passato concluso (ayer, el año pasado...).",
+      html:`<div class="box"><pre class="mono">hablé, hablaste, habló...
+comí, comiste, comió...</pre></div>` },
+    { title:"Perfecto", kicker:"Collegato al presente (hoy, este año...).",
+      html:`<div class="box"><pre class="mono">he, has, ha, hemos, habéis, han + participio
+He estudiado.</pre></div>` },
+    { title:"Imperfecto", kicker:"Descrizioni/abitudini nel passato.",
+      html:`<div class="box"><pre class="mono">hablaba / comía
+ser: era  ir: iba  ver: veía</pre></div>` },
+    { title:"Pluscuamperfecto", kicker:"Avevo fatto: había + participio.",
+      html:`<div class="box"><pre class="mono">Cuando llegué, la reunión había terminado.</pre></div>` },
+    { title:"Futuro", kicker:"-é, -ás, -á... + irregolari (tendré, podré...).",
+      html:`<div class="box"><pre class="mono">hablaré, comeré, viviré
+tendré, podré, diré, haré, habrá</pre></div>` },
+    { title:"Ir a + infinitivo", kicker:"Futuro vicino: voy a…",
+      html:`<div class="box"><pre class="mono">Voy a estudiar.
+Vamos a salir.</pre></div>` }
+  ];
+
+  // ========= QUIZ (feedback immediato + spiegazione SEMPRE) =========
+  const quiz = [
+    {topic:"Presente regolare", q:"Nosotros ____ (vivir) en Roma.", opts:["vive","vivimos","vivís","viven"], c:1,
+     ex:"Con -IR, 'nosotros' finisce in -imos: vivimos."},
+    {topic:"Ser/Estar", q:"Per dire 'Sono stanco' scelgo:", opts:["Soy cansado","Estoy cansado","Es cansado","Estás cansado (io)"], c:1,
+     ex:"Stato/condizione = ESTAR: estoy cansado."},
+    {topic:"Cambio vocalico", q:"Yo ____ (poder) dormir.", opts:["podo","pudo","puedo","podemos"], c:2,
+     ex:"Poder fa O→UE: puedo, puedes, puede…"},
+    {topic:"Gustar", q:"A mí ____ los libros.", opts:["me gusta","me gustan","te gusta","le gustan"], c:1,
+     ex:"'Los libros' è plurale → me gustan."},
+    {topic:"Estar + gerundio", q:"'Sto studiando adesso' è:", opts:["Estudio ahora","Estoy estudiar","Estoy estudiando","Soy estudiando"], c:2,
+     ex:"Azione in corso: estar + gerundio → estoy estudiando."}
+  ];
+
+  // ========= STATE =========
+  const state = { mode:"theory", ti:0, qi:0, score:0, mistakes:0, answered:false };
+
+  const $ = (id)=>document.getElementById(id);
+  const letters = ["A","B","C","D","E","F"];
+
+  function setModePill(){
+    $("modePill").textContent = state.mode==="theory" ? "Modalità: Teoria" : (state.mode==="quiz" ? "Modalità: Quiz" : "Modalità: Risultati");
+    $("statusText").textContent = state.mode==="theory" ? "Teoria" : (state.mode==="quiz" ? "Quiz" : "Risultati");
+    $("sectionLabel").textContent = state.mode==="theory" ? "Teoria" : (state.mode==="quiz" ? "Quiz" : "Risultati");
+  }
+  function pct(n,d){ return d? Math.round((n/d)*100):0; }
+
+  function updateDash(){
+    $("theoryTotal").textContent = theory.length;
+    $("theoryDone").textContent = Math.min(state.ti, theory.length);
+    $("score").textContent = state.score;
+    $("mistakes").textContent = state.mistakes;
+    $("scoreTotal").textContent = quiz.length;
+  }
+  function updateBar(){
+    const total = state.mode==="theory" ? theory.length : quiz.length;
+    const done = state.mode==="theory" ? state.ti : state.qi;
+    $("bar").style.width = pct(done, total) + "%";
+    $("counter").textContent = `${Math.min((state.mode==="theory"? state.ti: state.qi)+1, total)}/${total}`;
+  }
+
+  function renderTheory(){
+    const item = theory[state.ti];
+    $("title").textContent = item.title;
+    $("kicker").textContent = item.kicker;
+    $("content").innerHTML = item.html;
+
+    $("prevBtn").disabled = state.ti===0;
+    $("nextBtn").disabled = false;
+    $("nextBtn").textContent = (state.ti===theory.length-1) ? "Finisci teoria ✅" : "Avanti ➡️";
+    $("jumpQuizBtn").disabled = false;
+  }
+
+  function renderQuiz(){
+    const q = quiz[state.qi];
+    $("title").textContent = q.topic;
+    $("kicker").textContent = "Scegli una risposta: feedback immediato + spiegazione.";
+
+    const optsHTML = q.opts.map((t,i)=>`
+      <button class="opt" data-i="${i}">
+        <div class="label">
+          <div class="badge">${letters[i]}</div>
+          <div style="font-weight:800">${t}</div>
+        </div>
+      </button>
+    `).join("");
+
+    $("content").innerHTML = `
+      <p class="quiz-q">${q.q}</p>
+      <div class="options" id="opts">${optsHTML}</div>
+      <div id="fb"></div>
+    `;
+
+    // bind: CLICK = immediate feedback
+    document.querySelectorAll(".opt").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const idx = Number(btn.dataset.i);
+        answer(idx);
+      });
+    });
+
+    $("prevBtn").disabled = state.qi===0 && !state.answered;
+    $("nextBtn").disabled = !state.answered; // <-- obbliga feedback prima di andare avanti
+    $("nextBtn").textContent = (state.qi===quiz.length-1) ? "Vedi risultati 🏁" : "Prossima domanda ➡️";
+    $("jumpQuizBtn").disabled = true;
+  }
+
+  function answer(idx){
+    if(state.answered) return;
+    const q = quiz[state.qi];
+    state.answered = true;
+
+    const correct = idx===q.c;
+    if(correct) state.score++; else state.mistakes++;
+
+    // lock + color
+    document.querySelectorAll(".opt").forEach(btn=>{
+      const i = Number(btn.dataset.i);
+      btn.disabled = true;
+      if(i===q.c) btn.classList.add("correct");
+      if(i===idx && idx!==q.c) btn.classList.add("wrong");
+    });
+
+    // immediate feedback + explanation ALWAYS
+    const fb = $("fb");
+    fb.innerHTML = `
+      <div class="feedback ${correct ? "ok":"bad"}">
+        <div style="font-weight:900; margin-bottom:6px;">
+          ${correct ? "✅ GIUSTO" : "❌ SBAGLIATO"}
+        </div>
+        <div><span class="hl">Spiegazione:</span> <span class="muted">${q.ex}</span></div>
+      </div>
+    `;
+
+    $("nextBtn").disabled = false;
+    updateDash(); updateBar();
+  }
+
+  function renderResults(){
+    const total = quiz.length;
+    const perc = pct(state.score, total);
+    $("title").textContent = "Risultati";
+    $("kicker").textContent = "Hai finito il quiz.";
+
+    $("content").innerHTML = `
+      <div class="box">
+        <p style="margin:0; font-weight:900; font-size:18px;">
+          Punteggio: <span class="hl">${state.score}</span> / ${total} (${perc}%)
+        </p>
+        <p class="muted" style="margin:8px 0 0;">Errori: <span class="hl">${state.mistakes}</span></p>
+      </div>
+    `;
+
+    $("prevBtn").disabled = true;
+    $("nextBtn").disabled = true;
+    $("jumpQuizBtn").disabled = false;
+  }
+
+  function render(){
+    setModePill(); updateDash(); updateBar();
+    if(state.mode==="theory") renderTheory();
+    else if(state.mode==="quiz") renderQuiz();
+    else renderResults();
+  }
+
+  function prev(){
+    if(state.mode==="theory"){
+      if(state.ti>0) state.ti--;
+    } else if(state.mode==="quiz"){
+      if(state.qi>0){
+        state.qi--;
+        state.answered=false;
+      }
+    }
+    render();
+  }
+  function next(){
+    if(state.mode==="theory"){
+      if(state.ti<theory.length-1) state.ti++;
+      else startQuiz();
+    } else if(state.mode==="quiz"){
+      if(!state.answered) return; // sicurezza
+      if(state.qi<quiz.length-1){
+        state.qi++;
+        state.answered=false;
+      } else {
+        state.mode="results";
+      }
+    }
+    render();
+  }
+  function startQuiz(){
+    state.mode="quiz";
+    state.qi=0;
+    state.score=0;
+    state.mistakes=0;
+    state.answered=false;
+  }
+  function resetAll(){
+    state.mode="theory";
+    state.ti=0;
+    state.qi=0;
+    state.score=0;
+    state.mistakes=0;
+    state.answered=false;
+    render();
+  }
+
+  // bind buttons
+  $("prevBtn").addEventListener("click", prev);
+  $("nextBtn").addEventListener("click", next);
+  $("jumpQuizBtn").addEventListener("click", ()=>{ startQuiz(); render(); });
+  $("resetBtn").addEventListener("click", resetAll);
+
+  render();
+</script>
+</body>
+</html>
