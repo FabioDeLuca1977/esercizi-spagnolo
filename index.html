@@ -2,425 +2,1202 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ripasso Spagnolo — Teoria + Quiz con Feedback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ripasso Spagnolo — Mobile (Completo)</title>
   <style>
     :root{
-      --bg:#0b1220; --card:#101a2e; --text:#e8eefc; --muted:#a8b3d6;
+      --bg:#0f172a;
+      --card:#111c33;
+      --text:#e6eefc;
+      --muted:#9fb0d2;
       --line:rgba(255,255,255,.12);
-      --ok:#35d07f; --bad:#ff5b6e; --warn:#ffd166;
-      --btn:#1f3bff; --btn2:#23304f;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+
+      --primary:#2563eb;
+      --primary2:#1e40af;
+
+      --ok:#16a34a;
+      --okBg:rgba(22,163,74,.15);
+
+      --bad:#dc2626;
+      --badBg:rgba(220,38,38,.15);
+
+      --shadow: 0 16px 40px rgba(0,0,0,.45);
       --radius: 18px;
     }
+
     *{box-sizing:border-box}
     body{
-      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 700px at 30% 10%, rgba(31,59,255,.25), transparent 60%),
-                  radial-gradient(900px 600px at 80% 30%, rgba(53,208,127,.18), transparent 60%),
-                  var(--bg);
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(37,99,235,.18), transparent 60%),
+        radial-gradient(700px 500px at 90% 30%, rgba(22,163,74,.14), transparent 60%),
+        var(--bg);
       color:var(--text);
+      display:flex;
+      justify-content:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:540px;
+      padding:16px 14px 22px;
+    }
+
+    .top{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .title{
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.2px;
+      margin:0;
+    }
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
       line-height:1.35;
     }
-    header{padding:24px 16px 10px; max-width:980px; margin:0 auto;}
-    .topbar{display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;}
-    h1{margin:0; font-size:clamp(20px, 3vw, 30px);}
-    .sub{color:var(--muted); margin-top:6px; max-width:72ch;}
-    .wrap{max-width:980px; margin:0 auto; padding:12px 16px 40px;}
-    .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:14px;}
-    @media (max-width: 920px){ .grid{grid-template-columns:1fr} }
+
+    .statusRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:6px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .progressWrap{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:999px;
+      overflow:hidden;
+      height:10px;
+      width:100%;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--primary), #22c55e);
+      transition: width .25s ease;
+    }
+
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border:1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding:16px;
+      margin-top:12px;
     }
-    .card h2{margin:0 0 10px; font-size:18px;}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted); font-size:12px;
-      background:rgba(255,255,255,.03);
+
+    .card h2{
+      margin:0 0 8px;
+      font-size:18px;
+      font-weight:900;
     }
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
-    .progress{
-      width:100%; height:10px; border-radius:999px; overflow:hidden;
-      border:1px solid var(--line); background:rgba(255,255,255,.04);
+    .kicker{
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
     }
-    .bar{
-      height:100%; width:0%;
-      background: linear-gradient(90deg, rgba(31,59,255,.9), rgba(53,208,127,.9));
-      transition: width .35s ease;
-    }
-    .btns{display:flex; gap:10px; flex-wrap:wrap;}
-    button{
-      border:0; cursor:pointer; color:var(--text);
-      padding:10px 12px; border-radius:12px;
-      background: var(--btn2);
-      border:1px solid var(--line);
-      transition: transform .06s ease, filter .2s ease, background .2s ease;
-      font-weight:600;
-    }
-    button.primary{background: var(--btn);}
-    button:active{transform: scale(.99);}
-    button[disabled]{opacity:.5; cursor:not-allowed;}
-    .tiny{font-size:12px; color:var(--muted);}
-    .theory-title{font-size:20px; margin:0 0 6px;}
-    .kicker{color:var(--muted); margin:0 0 12px;}
-    .box{
+
+    .theoryBox{
+      background: rgba(0,0,0,.22);
       border:1px solid var(--line);
       border-radius:14px;
       padding:12px;
-      background:rgba(0,0,0,.18);
     }
+
     .mono{
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 13px;
+      color:#dbe7ff;
       white-space: pre-wrap;
-      word-break: break-word;
       margin:0;
-      color:#dfe7ff;
+      line-height:1.35;
     }
-    ul{margin:10px 0 0 18px; color:var(--muted);}
-    .hl{color:var(--text); font-weight:700;}
-    .quiz-q{margin:0 0 10px; font-size:18px;}
-    .options{display:grid; gap:10px; margin-top:12px;}
+
+    .q{
+      font-size:17px;
+      font-weight:900;
+      margin:0 0 10px;
+    }
+
     .opt{
-      text-align:left;
-      padding:12px;
+      width:100%;
+      padding:14px 14px;
+      margin-top:10px;
       border-radius:14px;
-      background: rgba(255,255,255,.03);
       border:1px solid var(--line);
-    }
-    .opt.correct{border-color: rgba(53,208,127,.7); background: rgba(53,208,127,.08);}
-    .opt.wrong{border-color: rgba(255,91,110,.65); background: rgba(255,91,110,.08);}
-    .opt .label{display:flex; gap:10px; align-items:flex-start;}
-    .badge{
-      min-width:28px; height:28px; display:grid; place-items:center;
-      border-radius:10px; border:1px solid var(--line);
-      background:rgba(255,255,255,.04); color:var(--muted);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      text-align:left;
+      font-size:16px;
       font-weight:800;
+      cursor:pointer;
     }
+    .opt:active{transform:scale(.99)}
+    .opt[disabled]{opacity:.92; cursor:not-allowed;}
+    .opt.correct{border-color: rgba(22,163,74,.75); background: var(--okBg);}
+    .opt.wrong{border-color: rgba(220,38,38,.7); background: var(--badBg);}
+
     .feedback{
       margin-top:12px;
       padding:12px;
       border-radius:14px;
       border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
     }
-    .feedback.ok{border-color: rgba(53,208,127,.6); background: rgba(53,208,127,.08);}
-    .feedback.bad{border-color: rgba(255,91,110,.6); background: rgba(255,91,110,.08);}
-    .divider{height:1px; background:var(--line); margin:12px 0;}
-    .muted{color:var(--muted);}
-    .rightCol .card{position:sticky; top:12px;}
-    @media (max-width:920px){ .rightCol .card{position:static;} }
-    .smallcaps{letter-spacing:.06em; text-transform:uppercase; font-size:11px; color:var(--muted);}
+    .feedback.ok{border-color: rgba(22,163,74,.7); background: var(--okBg); color: #d7ffe6;}
+    .feedback.bad{border-color: rgba(220,38,38,.7); background: var(--badBg); color: #ffd7dc;}
+    .feedback strong{color:var(--text)}
+
+    .nav{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    button.navBtn{
+      width:100%;
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      font-size:15px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    button.navBtn.primary{
+      background: var(--primary);
+      border-color: rgba(255,255,255,.14);
+    }
+    button.navBtn.primary:active{background: var(--primary2);}
+    button.navBtn[disabled]{opacity:.5; cursor:not-allowed;}
+
+    .bottomNote{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    .scoreBox{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .scoreItem{
+      flex:1 1 auto;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:14px;
+      padding:10px 12px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:900;
+      min-width: 160px;
+    }
+    .scoreItem span{color:var(--text)}
+    .small{color:var(--muted); font-size:12px; margin-top:8px; line-height:1.35;}
+    .hidden{display:none;}
+
+    /* Home list */
+    .list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+    .lessonBtn{
+      width:100%;
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      text-align:left;
+      cursor:pointer;
+    }
+    .lessonBtn:active{transform:scale(.99)}
+    .lessonTop{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .lessonName{font-weight:950; font-size:15px; line-height:1.2;}
+    .tag{
+      font-size:11px;
+      font-weight:900;
+      color:var(--muted);
+      border:1px solid var(--line);
+      padding:5px 8px;
+      border-radius:999px;
+      white-space:nowrap;
+      background: rgba(255,255,255,.03);
+    }
+    .lessonMeta{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.25;
+    }
+    .rowBtns{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .danger{
+      background: rgba(220,38,38,.18) !important;
+      border-color: rgba(220,38,38,.25) !important;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="topbar">
-      <div>
-        <h1>Ripasso Spagnolo — Teoria + Quiz (feedback immediato)</h1>
-        <p class="sub">
-          Nel quiz: <span class="hl">clicchi una risposta</span> e ottieni subito
-          <span class="hl">GIUSTO/SBAGLIATO</span> + <span class="hl">spiegazione</span>.
-        </p>
-      </div>
-      <div class="pill" id="modePill">Modalità: Teoria</div>
-    </div>
-  </header>
+  <div class="container">
+    <div class="top">
+      <p class="title">Ripasso Spagnolo — Mobile</p>
+      <p class="subtitle">
+        Semplice e completo: <strong>Home</strong> → scegli lezione → micro-teoria → 5 quiz con feedback immediato → fine lezione → (se serve) “Rifai sbagliate”.
+        Il progresso si salva sul dispositivo.
+      </p>
 
-  <div class="wrap">
-    <div class="grid">
-      <div>
-        <div class="card">
-          <div class="row">
-            <div>
-              <div class="smallcaps" id="sectionLabel">Teoria</div>
-              <h2 class="theory-title" id="title">—</h2>
-              <p class="kicker" id="kicker">—</p>
-            </div>
-            <div class="pill"><span id="counter">0/0</span></div>
-          </div>
-
-          <div class="progress"><div class="bar" id="bar"></div></div>
-
-          <div class="divider"></div>
-
-          <div id="content"></div>
-
-          <div class="divider"></div>
-
-          <div class="btns">
-            <button id="prevBtn">⬅️ Indietro</button>
-            <button class="primary" id="nextBtn">Avanti ➡️</button>
-            <button id="jumpQuizBtn">Vai al Quiz 🎯</button>
-            <button id="resetBtn">Reset</button>
-          </div>
-
-          <div class="tiny muted" id="note">
-            Nel quiz, il feedback appare subito sotto le opzioni.
-          </div>
-        </div>
+      <div class="statusRow">
+        <div class="pill" id="modePill">Home</div>
+        <div class="pill" id="stepPill">Progresso</div>
       </div>
 
-      <div class="rightCol">
-        <div class="card">
-          <h2>Dashboard</h2>
-          <div class="box">
-            <p class="muted" style="margin:0 0 8px;">Stato: <span class="hl" id="statusText">Teoria</span></p>
-            <p class="muted" style="margin:0 0 8px;">Teoria: <span class="hl" id="theoryDone">0</span>/<span id="theoryTotal">0</span></p>
-            <p class="muted" style="margin:0 0 8px;">Quiz: <span class="hl" id="score">0</span>/<span id="scoreTotal">0</span></p>
-            <p class="muted" style="margin:0;">Errori: <span class="hl" id="mistakes">0</span></p>
-          </div>
-          <div class="divider"></div>
-          <h2>Come funziona il feedback</h2>
-          <ul>
-            <li>Dopo il click: evidenzia <span class="hl">verde</span> la risposta corretta.</li>
-            <li>Se sbagli: evidenzia <span class="hl">rosso</span> la tua e verde la corretta.</li>
-            <li>Sotto compare la <span class="hl">spiegazione</span> (sempre).</li>
-          </ul>
-        </div>
+      <div class="progressWrap" aria-label="progresso">
+        <div class="bar" id="bar"></div>
       </div>
     </div>
+
+    <div class="card" id="card"></div>
+
+    <div class="nav" id="nav">
+      <button class="navBtn" id="backBtn">⬅️ Indietro</button>
+      <button class="navBtn primary" id="nextBtn">Avanti ➡️</button>
+    </div>
+
+    <div class="bottomNote" id="note"></div>
   </div>
 
 <script>
-  // ========= TEORIA =========
-  const theory = [
-    { title:"Presente — desinenze regolari", kicker:"Impara a memoria -AR / -ER / -IR.",
-      html:`<div class="box"><pre class="mono">-AR (hablar): hablo, hablas, habla, hablamos, habláis, hablan
+  // ==========================================================
+  // CONTENUTI: lezioni + 5 domande ciascuna (con spiegazione)
+  // ==========================================================
+  // Nota "senza allucinazioni": qui c'è una struttura completa di ripasso sui tempi/strutture.
+  // Se vuoi frasi/esempi IDENTICI del libro, vanno copiati 1:1 dal testo e inseriti.
+  const lessons = [
+    {
+      id:"presente_regolari",
+      title:"Presente indicativo — verbi regolari",
+      kicker:"Memorizza le desinenze -AR / -ER / -IR.",
+      theory:`-AR (hablar): hablo, hablas, habla, hablamos, habláis, hablan
 -ER (comer):  como, comes, come, comemos, coméis, comen
--IR (vivir):  vivo, vives, vive, vivimos, vivís, viven</pre></div>` },
-    { title:"Ser vs Estar", kicker:"SER = identità; ESTAR = stato/luogo.",
-      html:`<div class="box"><pre class="mono">SER: soy, eres, es, somos, sois, son
-ESTAR: estoy, estás, está, estamos, estáis, están</pre></div>` },
-    { title:"Cambio vocalico", kicker:"E→IE, O→UE, E→I (non cambia in nosotros/vosotros).",
-      html:`<div class="box"><pre class="mono">querer: quiero, quieres, quiere / queremos, queréis / quieren
-poder:  puedo, puedes, puede / podemos, podéis / pueden
-pedir:  pido, pides, pide / pedimos, pedís / piden</pre></div>` },
-    { title:"Verbi tipo GUSTAR", kicker:"me gusta (sing.) / me gustan (plur.).",
-      html:`<div class="box"><pre class="mono">Me gusta el fútbol.
-Me gustan los libros.</pre><p class="muted" style="margin:10px 0 0;">Simili: encantar, doler, interesar, importar, apetecer, quedar, sentar.</p></div>` },
-    { title:"Estar + gerundio", kicker:"Azione in corso: sto facendo.",
-      html:`<div class="box"><pre class="mono">Estoy estudiando.
-Está lloviendo.</pre></div>` },
-    { title:"Indefinido", kicker:"Passato concluso (ayer, el año pasado...).",
-      html:`<div class="box"><pre class="mono">hablé, hablaste, habló...
-comí, comiste, comió...</pre></div>` },
-    { title:"Perfecto", kicker:"Collegato al presente (hoy, este año...).",
-      html:`<div class="box"><pre class="mono">he, has, ha, hemos, habéis, han + participio
-He estudiado.</pre></div>` },
-    { title:"Imperfecto", kicker:"Descrizioni/abitudini nel passato.",
-      html:`<div class="box"><pre class="mono">hablaba / comía
-ser: era  ir: iba  ver: veía</pre></div>` },
-    { title:"Pluscuamperfecto", kicker:"Avevo fatto: había + participio.",
-      html:`<div class="box"><pre class="mono">Cuando llegué, la reunión había terminado.</pre></div>` },
-    { title:"Futuro", kicker:"-é, -ás, -á... + irregolari (tendré, podré...).",
-      html:`<div class="box"><pre class="mono">hablaré, comeré, viviré
-tendré, podré, diré, haré, habrá</pre></div>` },
-    { title:"Ir a + infinitivo", kicker:"Futuro vicino: voy a…",
-      html:`<div class="box"><pre class="mono">Voy a estudiar.
-Vamos a salir.</pre></div>` }
+-IR (vivir):  vivo, vives, vive, vivimos, vivís, viven`,
+      quiz:[
+        { q:"Nosotros ____ (hablar) español.", opts:["hablamos","hablan","habláis","hablo"], c:0, ex:"Con 'nosotros' -AR finisce in -amos: hablamos." },
+        { q:"Vosotros ____ (comer) en casa.", opts:["comemos","coméis","come","comen"], c:1, ex:"Con 'vosotros' -ER finisce in -éis: coméis." },
+        { q:"Yo ____ (vivir) en Italia.", opts:["vive","vivo","vivimos","viven"], c:1, ex:"Con 'yo' -IR finisce in -o: vivo." },
+        { q:"Ellas ____ (hablar) mucho.", opts:["hablamos","habláis","hablan","habla"], c:2, ex:"Con 'ellas/ellos' -AR finisce in -an: hablan." },
+        { q:"Tú ____ (comer) pasta.", opts:["comes","como","comen","coméis"], c:0, ex:"Con 'tú' -ER finisce in -es: comes." }
+      ]
+    },
+    {
+      id:"ser_estar",
+      title:"SER vs ESTAR",
+      kicker:"SER = identità/definizione; ESTAR = stato/luogo.",
+      theory:`SER: soy, eres, es, somos, sois, son
+ESTAR: estoy, estás, está, estamos, estáis, están`,
+      quiz:[
+        { q:"'Sono italiano' →", opts:["Estoy italiano","Soy italiano","Es italiano","Estás italiano"], c:1, ex:"Nazionalità/identità → SER: soy italiano." },
+        { q:"'Sono stanco' →", opts:["Soy cansado","Estoy cansado","Es cansado","Estás cansado (io)"], c:1, ex:"Stato/condizione → ESTAR: estoy cansado." },
+        { q:"'È a casa' →", opts:["Es en casa","Está en casa","Soy en casa","Están a casa"], c:1, ex:"Luogo → ESTAR: está en casa." },
+        { q:"'Siamo studenti' →", opts:["Somos estudiantes","Estamos estudiantes","Son estudiantes","Sois estudiante"], c:0, ex:"Definizione/ruolo → SER: somos estudiantes." },
+        { q:"'La porta è aperta' (risultato) →", opts:["Es abierta","Está abierta","Soy abierta","Estás abierta"], c:1, ex:"Condizione/risultato → ESTAR: está abierta." }
+      ]
+    },
+    {
+      id:"cambio_vocalico",
+      title:"Cambio vocalico",
+      kicker:"E→IE, O→UE, E→I. Non cambia in nosotros/vosotros.",
+      theory:`E→IE: querer → quiero, quieres, quiere / queremos, queréis / quieren
+O→UE: poder  → puedo, puedes, puede / podemos, podéis / pueden
+E→I : pedir  → pido, pides, pide / pedimos, pedís / piden`,
+      quiz:[
+        { q:"Yo ____ (querer) dormir.", opts:["quero","quiero","queremos","quiere"], c:1, ex:"Querer fa E→IE in 'yo': quiero." },
+        { q:"Nosotros ____ (poder) entrar.", opts:["podemos","puedo","pueden","poder"], c:0, ex:"In 'nosotros' non cambia: podemos." },
+        { q:"Tú ____ (pedir) ayuda.", opts:["pides","pidimos","pido","piden"], c:0, ex:"Pedir fa E→I: tú pides." },
+        { q:"Vosotros ____ (querer) estudiar.", opts:["queréis","quieres","quiero","quieren"], c:0, ex:"Vosotros: queréis." },
+        { q:"Ellos ____ (poder) venir.", opts:["podemos","pueden","puedo","poden"], c:1, ex:"Ellos: pueden (O→UE)." }
+      ]
+    },
+    {
+      id:"yo_irregolari",
+      title:"Irregolari in YO",
+      kicker:"Irregolarità tipiche: tengo, vengo, digo, hago, pongo, salgo.",
+      theory:`tener→tengo | venir→vengo | decir→digo | hacer→hago | poner→pongo | salir→salgo`,
+      quiz:[
+        { q:"Yo ____ (tener) trece años.", opts:["tengo","tienes","teno","tiene"], c:0, ex:"Tener in 'yo' → tengo." },
+        { q:"Yo ____ (decir) la verdad.", opts:["digo","dice","decimos","dices"], c:0, ex:"Decir in 'yo' → digo." },
+        { q:"Yo ____ (hacer) deporte.", opts:["hago","hace","hacen","hacemos"], c:0, ex:"Hacer in 'yo' → hago." },
+        { q:"Yo ____ (salir) ahora.", opts:["salgo","sales","sale","salen"], c:0, ex:"Salir in 'yo' → salgo." },
+        { q:"Yo ____ (poner) la mesa.", opts:["pongo","pones","pone","ponen"], c:0, ex:"Poner in 'yo' → pongo." }
+      ]
+    },
+    {
+      id:"gustar",
+      title:"Verbi tipo GUSTAR",
+      kicker:"Me gusta (sing.) / me gustan (plur.).",
+      theory:`Me gusta el fútbol. (sing.)
+Me gustan los libros. (plur.)
+Simili: encantar, interesar, importar, doler, apetecer, quedar, sentar`,
+      quiz:[
+        { q:"A mí ____ los libros.", opts:["me gusta","me gustan","te gustan","le gusta"], c:1, ex:"'Los libros' plurale → me gustan." },
+        { q:"A nosotros ____ la pizza.", opts:["nos gustan","nos gusta","me gusta","les gusta"], c:1, ex:"'La pizza' singolare → nos gusta." },
+        { q:"A ella ____ el fútbol.", opts:["le gusta","le gustan","me gusta","se gusta"], c:0, ex:"A ella → le. Singolare: le gusta." },
+        { q:"A mí ____ la cabeza. (doler)", opts:["me duelen","me duele","te duele","le duelen"], c:1, ex:"'La cabeza' singolare → me duele." },
+        { q:"A ellos ____ las piernas. (doler)", opts:["les duele","les duelen","le duelen","les dolor"], c:1, ex:"'Las piernas' plurale → les duelen." }
+      ]
+    },
+    {
+      id:"riflessivi",
+      title:"Verbi riflessivi",
+      kicker:"Pronome + verbo: me/te/se/nos/os/se.",
+      theory:`Ejemplo: levantarse
+me levanto, te levantas, se levanta, nos levantamos, os levantáis, se levantan`,
+      quiz:[
+        { q:"Yo ____ a las siete. (levantarse)", opts:["me levanto","levanto me","te levanto","se levanto"], c:0, ex:"Pronome prima: me levanto." },
+        { q:"Tú ____ pronto. (ducharse)", opts:["te duchas","me duchas","se duchas","duchas te"], c:0, ex:"Tú → te duchas." },
+        { q:"Él ____ a las diez. (acostarse)", opts:["me acuesto","se acuesta","te acuestas","nos acostamos"], c:1, ex:"Él → se acuesta." },
+        { q:"Nosotros ____ en casa. (quedarse)", opts:["nos quedamos","se quedamos","me quedo","os quedáis"], c:0, ex:"Nosotros → nos quedamos." },
+        { q:"Vosotros ____ tarde. (levantarse)", opts:["os levantáis","nos levantamos","se levantan","levantáis"], c:0, ex:"Vosotros → os levantáis." }
+      ]
+    },
+    {
+      id:"estar_gerundio",
+      title:"Estar + gerundio",
+      kicker:"Azione in corso: estoy/estás/está + gerundio.",
+      theory:`hablar→hablando | comer→comiendo | vivir→viviendo
+Estoy estudiando. / Está lloviendo.`,
+      quiz:[
+        { q:"'Sto studiando adesso' →", opts:["Estudio ahora","Estoy estudiando","Soy estudiando","Estoy estudiar"], c:1, ex:"Azione in corso → estar + gerundio: estoy estudiando." },
+        { q:"Él ____ (leer) ahora.", opts:["está leyendo","lee","está leer","es leyendo"], c:0, ex:"Estar + gerundio: está leyendo." },
+        { q:"Nosotros ____ (comer) ahora.", opts:["estamos comiendo","comemos","somos comiendo","estamos comer"], c:0, ex:"Nosotros: estamos comiendo." },
+        { q:"Ellas ____ (vivir) aquí ahora (progressivo).", opts:["están viviendo","viven","están vive","son viviendo"], c:0, ex:"Ellas: están viviendo." },
+        { q:"¿Tú ____ (hablar) por teléfono ahora?", opts:["estás hablando","hablas","estás habla","eres hablando"], c:0, ex:"Tú: estás hablando." }
+      ]
+    },
+    {
+      id:"indefinido_reg",
+      title:"Pretérito indefinido — regolari",
+      kicker:"Passato concluso: ayer, el año pasado, el lunes…",
+      theory:`-AR: hablé, hablaste, habló, hablamos, hablasteis, hablaron
+-ER/-IR: comí, comiste, comió, comimos, comisteis, comieron`,
+      quiz:[
+        { q:"Ayer yo ____ pizza. (comer)", opts:["como","comí","comía","he comido"], c:1, ex:"Ayer → passato concluso → indefinido: comí." },
+        { q:"El domingo nosotros ____ por teléfono. (hablar)", opts:["hablamos","hablábamos","hablé","hablaré"], c:0, ex:"Indefinido -AR 'nosotros' = hablamos (uguale al presente: decide il contesto)." },
+        { q:"Tú ____ una carta. (escribir)", opts:["escribiste","escribes","escribías","has escrito"], c:0, ex:"Indefinido (tú): escribiste." },
+        { q:"Ellos ____ en casa. (vivir)", opts:["vivieron","viven","vivían","han vivido"], c:0, ex:"Indefinido (ellos): vivieron." },
+        { q:"Vosotros ____ rápido. (comer)", opts:["comisteis","coméis","comíamos","comeréis"], c:0, ex:"Indefinido (vosotros): comisteis." }
+      ]
+    },
+    {
+      id:"indefinido_irreg",
+      title:"Pretérito indefinido — irregolari chiave",
+      kicker:"Da memorizzare: ser/ir, tener, estar, haber, decir (e altri).",
+      theory:`ser/ir: fui, fuiste, fue, fuimos, fuisteis, fueron
+tener: tuve… | estar: estuve… | haber: hubo | decir: dije`,
+      quiz:[
+        { q:"El año pasado nosotros ____ a Madrid. (ir)", opts:["íbamos","fuimos","vamos","hemos ido"], c:1, ex:"Ser/ir all’indefinido: fuimos." },
+        { q:"Ayer yo ____ un problema. (tener)", opts:["tenía","tuve","tengo","he tenido"], c:1, ex:"Indefinido di tener: tuve." },
+        { q:"Anoche él ____ en casa. (estar)", opts:["estaba","estuvo","está","ha estado"], c:1, ex:"Indefinido di estar: estuvo." },
+        { q:"Ayer ____ mucha gente. (haber)", opts:["había","hubo","hay","ha habido"], c:1, ex:"Indefinido di haber: hubo." },
+        { q:"Yo ____ la verdad. (decir)", opts:["decía","dije","digo","he dicho"], c:1, ex:"Indefinido di decir: dije." }
+      ]
+    },
+    {
+      id:"perfecto",
+      title:"Pretérito perfecto",
+      kicker:"Oggi/questa settimana/ultimamente: he/has/ha… + participio.",
+      theory:`haber (presente): he, has, ha, hemos, habéis, han
+participio: -ado / -ido
+He estudiado. / Hemos comido.`,
+      quiz:[
+        { q:"Hoy ____ mucho. (estudiar)", opts:["estudié","he estudiado","estudiaba","había estudiado"], c:1, ex:"Hoy → collegato al presente → he estudiado." },
+        { q:"Esta semana nosotros ____ pizza. (comer)", opts:["comimos","hemos comido","comíamos","habíamos comido"], c:1, ex:"Esta semana → hemos comido." },
+        { q:"¿Tú ____ el libro? (leer)", opts:["leíste","has leído","leías","habías leído"], c:1, ex:"Perfecto: has leído." },
+        { q:"Ellos ____ tarde. (llegar)", opts:["llegaron","han llegado","llegaban","habían llegado"], c:1, ex:"Perfecto: han llegado." },
+        { q:"Participio di 'hablar' è:", opts:["hablido","hablado","hablaba","hablé"], c:1, ex:"-AR → -ado: hablado." }
+      ]
+    },
+    {
+      id:"imperfecto",
+      title:"Imperfecto",
+      kicker:"Descrizioni e abitudini nel passato: 'da piccolo…'.",
+      theory:`-AR: hablaba…
+-ER/-IR: comía…
+Irregolari: ser→era | ir→iba | ver→veía`,
+      quiz:[
+        { q:"Cuando era pequeño, yo ____ al fútbol. (jugar)", opts:["jugué","jugaba","he jugado","había jugado"], c:1, ex:"Abitudine nel passato → jugaba." },
+        { q:"Antes nosotros ____ en Roma. (vivir)", opts:["vivimos","vivíamos","vivimos (ayer)","hemos vivido"], c:1, ex:"Descrizione/abitudine → vivíamos." },
+        { q:"De niño, ____ muy feliz. (ser, yo)", opts:["fui","era","soy","he sido"], c:1, ex:"Imperfecto di ser: era." },
+        { q:"Cuando tenía 10 años, ____ a la escuela. (ir, yo)", opts:["fui","iba","voy","he ido"], c:1, ex:"Imperfecto di ir: iba." },
+        { q:"Antes ____ la tele todas las noches. (ver, yo)", opts:["vi","veía","veo","he visto"], c:1, ex:"Imperfecto di ver: veía." }
+      ]
+    },
+    {
+      id:"imperfecto_gerundio",
+      title:"Estaba + gerundio (passato in corso)",
+      kicker:"Azione in corso nel passato: estaba + gerundio.",
+      theory:`A las seis, estaba estudiando. (azione in corso in quel momento)`,
+      quiz:[
+        { q:"A las seis yo ____ cuando sonó el teléfono. (estudiar)", opts:["estudié","estaba estudiando","he estudiado","estudio"], c:1, ex:"Azione in corso in quel momento → estaba estudiando." },
+        { q:"Ellos ____ cuando llegué. (comer)", opts:["comieron","estaban comiendo","han comido","comían (abitudine)"], c:1, ex:"Momento preciso → estaban comiendo." },
+        { q:"¿Tú ____ por teléfono cuando te llamé? (hablar)", opts:["hablaste","estabas hablando","has hablado","hablabas (generico)"], c:1, ex:"Momento preciso → estabas hablando." },
+        { q:"Nosotros ____ cuando empezó a llover. (caminar)", opts:["caminamos","estábamos caminando","hemos caminado","caminábamos (abitudine)"], c:1, ex:"Azione in corso → estábamos caminando." },
+        { q:"Gerundio di 'vivir' è:", opts:["vivando","viviendo","vivido","vivía"], c:1, ex:"-IR → -iendo: viviendo." }
+      ]
+    },
+    {
+      id:"pluscuamperfecto",
+      title:"Pluscuamperfecto",
+      kicker:"Azione precedente nel passato: había + participio.",
+      theory:`haber (imperfecto): había, habías, había, habíamos, habíais, habían
+Cuando llegué, ya había empezado.`,
+      quiz:[
+        { q:"Cuando llegué, la clase ya ____. (empezar)", opts:["empezó","había empezado","ha empezado","empezaba"], c:1, ex:"Azione prima di un’altra nel passato → había empezado." },
+        { q:"Yo ____ antes de salir. (comer)", opts:["comí","había comido","he comido","comía"], c:1, ex:"Prima di un’altra azione nel passato → había comido." },
+        { q:"Ellos ____ el libro cuando lo pedí. (leer)", opts:["leyeron","habían leído","han leído","leían"], c:1, ex:"Pluscuamperfecto: habían leído." },
+        { q:"Nosotros ____ la tarea antes de cenar. (hacer)", opts:["hicimos","habíamos hecho","hemos hecho","hacíamos"], c:1, ex:"Pluscuamperfecto: habíamos hecho." },
+        { q:"Forma corretta: yo + pluscuamperfecto di estudiar", opts:["había estudiado","he estudiado","estuve estudiado","estudiaba"], c:0, ex:"Pluscuamperfecto = había + participio." }
+      ]
+    },
+    {
+      id:"futuro_simple",
+      title:"Futuro simple — regolare",
+      kicker:"Infinito + -é, -ás, -á, -emos, -éis, -án.",
+      theory:`hablaré, hablarás, hablará, hablaremos, hablaréis, hablarán`,
+      quiz:[
+        { q:"Mañana yo ____ a mi amigo. (llamar)", opts:["llamo","llamaré","he llamado","llamaba"], c:1, ex:"Futuro (yo): llamaré." },
+        { q:"Tú ____ mañana. (hablar)", opts:["hablas","hablarás","hablaste","has hablado"], c:1, ex:"Futuro (tú): hablarás." },
+        { q:"Nosotros ____ pronto. (salir, regolare)", opts:["salimos","saldremos","saliremos","hemos salido"], c:2, ex:"Futuro regolare: saliremos." },
+        { q:"Ellos ____ en verano. (viajar)", opts:["viajan","viajarán","viajaron","viajaban"], c:1, ex:"Futuro (ellos): viajarán." },
+        { q:"Vosotros ____ más tarde. (comer)", opts:["coméis","comeréis","comisteis","comían"], c:1, ex:"Futuro (vosotros): comeréis." }
+      ]
+    },
+    {
+      id:"futuro_irreg",
+      title:"Futuro — irregolari più comuni",
+      kicker:"Cambia la radice, ma le desinenze restano uguali.",
+      theory:`tener→tendré | venir→vendré | poder→podré | decir→diré | hacer→haré | haber→habrá`,
+      quiz:[
+        { q:"Yo ____ mañana. (tener)", opts:["teneré","tendré","tuve","tenía"], c:1, ex:"Futuro irregolare: tendré." },
+        { q:"Él ____ más tarde. (venir)", opts:["venirá","vendrá","vino","venía"], c:1, ex:"Futuro irregolare: vendrá." },
+        { q:"Nosotros ____ hacerlo. (poder)", opts:["podremos","podemos","pudimos","podríamos"], c:0, ex:"Futuro irregolare: podremos." },
+        { q:"Yo ____ la verdad. (decir)", opts:["diré","deciré","dije","digo"], c:0, ex:"Futuro irregolare: diré." },
+        { q:"Mañana ____ sol. (haber)", opts:["hay","había","habrá","hubo"], c:2, ex:"Futuro di haber: habrá." }
+      ]
+    },
+    {
+      id:"ir_a_inf",
+      title:"Ir a + infinitivo",
+      kicker:"Futuro vicino / intenzione: voy a…",
+      theory:`voy a estudiar | vas a salir | va a llover | vamos a comer`,
+      quiz:[
+        { q:"'Stiamo per uscire' →", opts:["Vamos salir","Vamos a salir","Fuimos a salir","Hemos salir"], c:1, ex:"Ir a + infinitivo → vamos a salir." },
+        { q:"Yo ____ estudiar ahora. (ir a)", opts:["voy a","vaya","va a","fui a"], c:0, ex:"Yo: voy a estudiar." },
+        { q:"¿Tú ____ venir mañana? (ir a)", opts:["vas a","vais a","van a","ibas a"], c:0, ex:"Tú: vas a venir." },
+        { q:"Él ____ llover. (sta per piovere)", opts:["va a","voy a","van a","iba a"], c:0, ex:"Él: va a llover." },
+        { q:"Nosotros ____ comer. (ir a)", opts:["vamos a","vamos","fuimos a","hemos a"], c:0, ex:"Nosotros: vamos a comer." }
+      ]
+    }
   ];
 
-  // ========= QUIZ (feedback immediato + spiegazione SEMPRE) =========
-  const quiz = [
-    {topic:"Presente regolare", q:"Nosotros ____ (vivir) en Roma.", opts:["vive","vivimos","vivís","viven"], c:1,
-     ex:"Con -IR, 'nosotros' finisce in -imos: vivimos."},
-    {topic:"Ser/Estar", q:"Per dire 'Sono stanco' scelgo:", opts:["Soy cansado","Estoy cansado","Es cansado","Estás cansado (io)"], c:1,
-     ex:"Stato/condizione = ESTAR: estoy cansado."},
-    {topic:"Cambio vocalico", q:"Yo ____ (poder) dormir.", opts:["podo","pudo","puedo","podemos"], c:2,
-     ex:"Poder fa O→UE: puedo, puedes, puede…"},
-    {topic:"Gustar", q:"A mí ____ los libros.", opts:["me gusta","me gustan","te gusta","le gustan"], c:1,
-     ex:"'Los libros' è plurale → me gustan."},
-    {topic:"Estar + gerundio", q:"'Sto studiando adesso' è:", opts:["Estudio ahora","Estoy estudiar","Estoy estudiando","Soy estudiando"], c:2,
-     ex:"Azione in corso: estar + gerundio → estoy estudiando."}
-  ];
+  // ==========================================================
+  // PERSISTENZA (localStorage)
+  // ==========================================================
+  const STORAGE_KEY = "spn_ripasso_v1";
 
-  // ========= STATE =========
-  const state = { mode:"theory", ti:0, qi:0, score:0, mistakes:0, answered:false };
-
-  const $ = (id)=>document.getElementById(id);
-  const letters = ["A","B","C","D","E","F"];
-
-  function setModePill(){
-    $("modePill").textContent = state.mode==="theory" ? "Modalità: Teoria" : (state.mode==="quiz" ? "Modalità: Quiz" : "Modalità: Risultati");
-    $("statusText").textContent = state.mode==="theory" ? "Teoria" : (state.mode==="quiz" ? "Quiz" : "Risultati");
-    $("sectionLabel").textContent = state.mode==="theory" ? "Teoria" : (state.mode==="quiz" ? "Quiz" : "Risultati");
+  function defaultSave(){
+    return {
+      // per lesson: best score and last run info
+      perLesson: lessons.map(() => ({
+        bestCorrect: 0,
+        bestAnswered: 5,
+        lastCorrect: 0,
+        lastAnswered: 0,
+        completed: false,
+        wrongLast: [] // indices of wrong questions from last run (0..4)
+      })),
+      totals: { bestCorrect: 0, bestAnswered: lessons.length * 5 },
+      // last position to continue
+      lastPosition: { mode:"home", lessonIndex:0, step:"theory", questionIndex:0, retryWrong:false, wrongQueue:[] }
+    };
   }
-  function pct(n,d){ return d? Math.round((n/d)*100):0; }
 
-  function updateDash(){
-    $("theoryTotal").textContent = theory.length;
-    $("theoryDone").textContent = Math.min(state.ti, theory.length);
-    $("score").textContent = state.score;
-    $("mistakes").textContent = state.mistakes;
-    $("scoreTotal").textContent = quiz.length;
+  function loadSave(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultSave();
+      const parsed = JSON.parse(raw);
+      // basic shape guard
+      if(!parsed || !parsed.perLesson || !Array.isArray(parsed.perLesson)) return defaultSave();
+      // if lesson count changed, rebuild but try to keep existing
+      if(parsed.perLesson.length !== lessons.length){
+        const fresh = defaultSave();
+        for(let i=0;i<Math.min(parsed.perLesson.length, fresh.perLesson.length);i++){
+          fresh.perLesson[i] = { ...fresh.perLesson[i], ...parsed.perLesson[i] };
+        }
+        fresh.totals = parsed.totals || fresh.totals;
+        fresh.lastPosition = parsed.lastPosition || fresh.lastPosition;
+        return fresh;
+      }
+      return parsed;
+    }catch{
+      return defaultSave();
+    }
   }
-  function updateBar(){
-    const total = state.mode==="theory" ? theory.length : quiz.length;
-    const done = state.mode==="theory" ? state.ti : state.qi;
-    $("bar").style.width = pct(done, total) + "%";
-    $("counter").textContent = `${Math.min((state.mode==="theory"? state.ti: state.qi)+1, total)}/${total}`;
+
+  function saveNow(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+  }
+
+  function resetProgress(){
+    save = defaultSave();
+    saveNow();
+  }
+
+  // ==========================================================
+  // STATE (runtime)
+  // modes: home | theory | quiz | lesson_end | final
+  // ==========================================================
+  let save = loadSave();
+
+  const state = {
+    mode: save.lastPosition?.mode || "home",
+    lessonIndex: clampInt(save.lastPosition?.lessonIndex, 0, lessons.length-1, 0),
+    questionIndex: clampInt(save.lastPosition?.questionIndex, 0, 4, 0),
+
+    // current run stats
+    answered: false,
+    runCorrect: 0,
+    runAnswered: 0,
+    wrongThisRun: [],
+
+    // retry wrong mode
+    retryWrong: !!save.lastPosition?.retryWrong,
+    wrongQueue: Array.isArray(save.lastPosition?.wrongQueue) ? save.lastPosition.wrongQueue.slice() : [],
+
+    // for quiz rendering
+    currentQuizIndices: [] // either [0..4] or wrongQueue
+  };
+
+  const el = (id) => document.getElementById(id);
+
+  function clampInt(v, min, max, fallback){
+    const n = Number(v);
+    if(!Number.isFinite(n)) return fallback;
+    return Math.max(min, Math.min(max, Math.trunc(n)));
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function lessonScoreText(i){
+    const s = save.perLesson[i];
+    const bestPct = s.bestAnswered ? Math.round((s.bestCorrect/s.bestAnswered)*100) : 0;
+    const lastPct = s.lastAnswered ? Math.round((s.lastCorrect/s.lastAnswered)*100) : 0;
+    return { bestPct, lastPct };
+  }
+
+  function overallProgressPct(){
+    // percent lessons completed
+    const done = save.perLesson.filter(x => x.completed).length;
+    return Math.round((done / lessons.length) * 100);
+  }
+
+  function setTopUI(){
+    const pct = overallProgressPct();
+    el("bar").style.width = pct + "%";
+    el("stepPill").textContent = `Completate: ${save.perLesson.filter(x=>x.completed).length}/${lessons.length}`;
+    el("modePill").textContent =
+      state.mode === "home" ? "Home" :
+      state.mode === "theory" ? "Teoria" :
+      state.mode === "quiz" ? (state.retryWrong ? "Quiz: Rifai sbagliate" : "Quiz") :
+      state.mode === "lesson_end" ? "Fine lezione" :
+      "Finale";
+  }
+
+  function setNav(visible){
+    el("nav").style.display = visible ? "" : "none";
+  }
+
+  function updateLastPosition(){
+    save.lastPosition = {
+      mode: state.mode,
+      lessonIndex: state.lessonIndex,
+      step: state.mode,
+      questionIndex: state.questionIndex,
+      retryWrong: state.retryWrong,
+      wrongQueue: state.wrongQueue.slice()
+    };
+    saveNow();
+  }
+
+  // ==========================================================
+  // HOME
+  // ==========================================================
+  function renderHome(){
+    setNav(false);
+    const items = lessons.map((L, i) => {
+      const s = save.perLesson[i];
+      const { bestPct, lastPct } = lessonScoreText(i);
+      const status = s.completed ? "Completata" : "Da fare";
+      const tag = s.completed ? "✅ " + status : "🕒 " + status;
+      const wrongCount = (s.wrongLast || []).length;
+      const extra = wrongCount > 0
+        ? `Ultima volta: ${s.lastCorrect}/${s.lastAnswered} (${lastPct}%). Sbagliate: ${wrongCount}.`
+        : `Ultima volta: ${s.lastAnswered ? `${s.lastCorrect}/${s.lastAnswered} (${lastPct}%)` : "—"}.`;
+
+      const bestLine = `Migliore: ${s.bestCorrect}/${s.bestAnswered} (${bestPct}%).`;
+
+      return `
+        <button class="lessonBtn" onclick="startLesson(${i})">
+          <div class="lessonTop">
+            <div class="lessonName">${escapeHtml(L.title)}</div>
+            <div class="tag">${tag}</div>
+          </div>
+          <div class="lessonMeta">${escapeHtml(L.kicker)}</div>
+          <div class="lessonMeta">${escapeHtml(extra)} ${escapeHtml(bestLine)}</div>
+        </button>
+      `;
+    }).join("");
+
+    const totalsBestPct = save.totals.bestAnswered ? Math.round((save.totals.bestCorrect/save.totals.bestAnswered)*100) : 0;
+
+    el("card").innerHTML = `
+      <h2>Home</h2>
+      <p class="kicker">
+        Scegli una lezione. Il progresso si salva automaticamente sul dispositivo.
+      </p>
+
+      <div class="theoryBox">
+        <div class="mono" style="white-space:normal;">
+          <strong>Totale migliore:</strong> ${save.totals.bestCorrect}/${save.totals.bestAnswered} (${totalsBestPct}%)
+          <br>
+          <strong>Lezioni completate:</strong> ${save.perLesson.filter(x=>x.completed).length}/${lessons.length}
+        </div>
+      </div>
+
+      <div class="rowBtns">
+        <button class="navBtn primary" onclick="continueLast()">Continua ▶️</button>
+        <button class="navBtn" onclick="goFinal()">Riepilogo 🧾</button>
+      </div>
+
+      <div class="rowBtns">
+        <button class="navBtn" onclick="setAllToNotCompleted()">Segna tutte “da fare”</button>
+        <button class="navBtn danger" onclick="confirmReset()">Reset progresso</button>
+      </div>
+
+      <div class="list">${items}</div>
+
+      <div class="small">
+        Tip: se una lezione è sotto 80%, rifai “Rifai sbagliate” finché arrivi almeno a 4/5.
+      </div>
+    `;
+
+    el("note").textContent = "Tocca una lezione per iniziare. 'Continua' riprende dall’ultimo punto salvato.";
+    updateLastPosition();
+  }
+
+  function confirmReset(){
+    const ok = confirm("Vuoi davvero azzerare tutto il progresso su questo dispositivo?");
+    if(!ok) return;
+    resetProgress();
+    // reload into runtime
+    save = loadSave();
+    state.mode = "home";
+    state.lessonIndex = 0;
+    state.questionIndex = 0;
+    state.retryWrong = false;
+    state.wrongQueue = [];
+    state.currentQuizIndices = [];
+    resetRunStats();
+    render();
+  }
+
+  function setAllToNotCompleted(){
+    save.perLesson = save.perLesson.map(s => ({...s, completed:false}));
+    saveNow();
+    renderHome();
+  }
+
+  function continueLast(){
+    // If lastPosition points to a mode that requires context, go there; else home
+    const lp = save.lastPosition || { mode:"home", lessonIndex:0, questionIndex:0, retryWrong:false, wrongQueue:[] };
+    state.mode = lp.mode || "home";
+    state.lessonIndex = clampInt(lp.lessonIndex, 0, lessons.length-1, 0);
+    state.questionIndex = clampInt(lp.questionIndex, 0, 4, 0);
+    state.retryWrong = !!lp.retryWrong;
+    state.wrongQueue = Array.isArray(lp.wrongQueue) ? lp.wrongQueue.slice() : [];
+    resetRunStats();
+    // If the last mode was quiz but wrongQueue is empty while retryWrong true, fix it:
+    if(state.mode === "quiz" && state.retryWrong && state.wrongQueue.length === 0){
+      state.retryWrong = false;
+    }
+    render();
+  }
+
+  function startLesson(i){
+    state.lessonIndex = i;
+    state.mode = "theory";
+    state.retryWrong = false;
+    state.wrongQueue = [];
+    resetRunStats();
+    render();
+  }
+
+  function goFinal(){
+    state.mode = "final";
+    setNav(false);
+    renderFinal();
+  }
+
+  // ==========================================================
+  // THEORY / QUIZ / END
+  // ==========================================================
+  function resetRunStats(){
+    state.answered = false;
+    state.runCorrect = 0;
+    state.runAnswered = 0;
+    state.wrongThisRun = [];
+    state.currentQuizIndices = [];
   }
 
   function renderTheory(){
-    const item = theory[state.ti];
-    $("title").textContent = item.title;
-    $("kicker").textContent = item.kicker;
-    $("content").innerHTML = item.html;
+    setNav(true);
+    const L = lessons[state.lessonIndex];
+    el("card").innerHTML = `
+      <h2>${escapeHtml(L.title)}</h2>
+      <p class="kicker">${escapeHtml(L.kicker)}</p>
+      <div class="theoryBox">
+        <pre class="mono">${escapeHtml(L.theory)}</pre>
+      </div>
 
-    $("prevBtn").disabled = state.ti===0;
-    $("nextBtn").disabled = false;
-    $("nextBtn").textContent = (state.ti===theory.length-1) ? "Finisci teoria ✅" : "Avanti ➡️";
-    $("jumpQuizBtn").disabled = false;
+      <div class="scoreBox">
+        <div class="scoreItem">Lezione: <span>${state.lessonIndex+1}</span>/<span>${lessons.length}</span></div>
+        <div class="scoreItem">Record lezione: <span>${save.perLesson[state.lessonIndex].bestCorrect}</span>/<span>${save.perLesson[state.lessonIndex].bestAnswered}</span></div>
+      </div>
+
+      <div class="small">Leggi 20–30 secondi. Poi premi “Inizia quiz”.</div>
+    `;
+
+    el("backBtn").disabled = false;
+    el("backBtn").textContent = "🏠 Home";
+    el("nextBtn").disabled = false;
+    el("nextBtn").textContent = "Inizia quiz 🎯";
+    el("note").textContent = "Nel quiz: scegli una risposta → feedback immediato + spiegazione.";
+    updateLastPosition();
+  }
+
+  function buildQuizIndices(){
+    if(state.retryWrong){
+      // queue may contain duplicates; normalize & keep in order
+      const uniq = [];
+      for(const idx of state.wrongQueue){
+        const n = clampInt(idx, 0, 4, null);
+        if(n === null) continue;
+        if(!uniq.includes(n)) uniq.push(n);
+      }
+      state.currentQuizIndices = uniq;
+    } else {
+      state.currentQuizIndices = [0,1,2,3,4];
+    }
   }
 
   function renderQuiz(){
-    const q = quiz[state.qi];
-    $("title").textContent = q.topic;
-    $("kicker").textContent = "Scegli una risposta: feedback immediato + spiegazione.";
+    setNav(true);
+    const L = lessons[state.lessonIndex];
+    buildQuizIndices();
 
-    const optsHTML = q.opts.map((t,i)=>`
-      <button class="opt" data-i="${i}">
-        <div class="label">
-          <div class="badge">${letters[i]}</div>
-          <div style="font-weight:800">${t}</div>
+    // if retryWrong and nothing to retry, go to lesson_end
+    if(state.retryWrong && state.currentQuizIndices.length === 0){
+      state.mode = "lesson_end";
+      renderLessonEnd();
+      return;
+    }
+
+    // map questionIndex to real index
+    const qPos = clampInt(state.questionIndex, 0, state.currentQuizIndices.length-1, 0);
+    state.questionIndex = qPos;
+    const realIdx = state.currentQuizIndices[qPos];
+    const Q = L.quiz[realIdx];
+
+    state.answered = false;
+
+    const totalQs = state.currentQuizIndices.length;
+    const label = state.retryWrong ? `Rifai sbagliate: ${qPos+1}/${totalQs}` : `Domanda ${qPos+1}/5`;
+
+    el("card").innerHTML = `
+      <h2>${escapeHtml(L.title)}</h2>
+      <p class="kicker">${label} — scegli una risposta.</p>
+
+      <div class="theoryBox" style="margin-bottom:12px;">
+        <div class="mono" style="white-space:normal;">
+          <strong>Mini-promemoria:</strong> ${escapeHtml(L.kicker)}
         </div>
-      </button>
-    `).join("");
+      </div>
 
-    $("content").innerHTML = `
-      <p class="quiz-q">${q.q}</p>
-      <div class="options" id="opts">${optsHTML}</div>
-      <div id="fb"></div>
+      <p class="q">${escapeHtml(Q.q)}</p>
+      <div id="opts"></div>
+      <div id="fb" class="hidden"></div>
+
+      <div class="scoreBox">
+        <div class="scoreItem">Run: <span>${state.runCorrect}</span>/<span>${state.runAnswered}</span></div>
+        <div class="scoreItem">Record lezione: <span>${save.perLesson[state.lessonIndex].bestCorrect}</span>/<span>${save.perLesson[state.lessonIndex].bestAnswered}</span></div>
+      </div>
     `;
 
-    // bind: CLICK = immediate feedback
-    document.querySelectorAll(".opt").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        const idx = Number(btn.dataset.i);
-        answer(idx);
-      });
+    const optsWrap = document.getElementById("opts");
+    Q.opts.forEach((t, i) => {
+      const b = document.createElement("button");
+      b.className = "opt";
+      b.textContent = t;
+      b.addEventListener("click", () => answer(i, realIdx));
+      optsWrap.appendChild(b);
     });
 
-    $("prevBtn").disabled = state.qi===0 && !state.answered;
-    $("nextBtn").disabled = !state.answered; // <-- obbliga feedback prima di andare avanti
-    $("nextBtn").textContent = (state.qi===quiz.length-1) ? "Vedi risultati 🏁" : "Prossima domanda ➡️";
-    $("jumpQuizBtn").disabled = true;
+    el("backBtn").disabled = true;
+    el("nextBtn").disabled = true; // sblocca dopo risposta
+    el("nextBtn").textContent = (qPos === totalQs - 1) ? "Fine ➡️" : "Prossima ➡️";
+    el("note").textContent = "Devi rispondere per sbloccare “Prossima”.";
+    updateLastPosition();
   }
 
-  function answer(idx){
+  function answer(choiceIndex, realIdx){
     if(state.answered) return;
-    const q = quiz[state.qi];
     state.answered = true;
 
-    const correct = idx===q.c;
-    if(correct) state.score++; else state.mistakes++;
+    const L = lessons[state.lessonIndex];
+    const Q = L.quiz[realIdx];
+    const opts = Array.from(document.querySelectorAll(".opt"));
+    opts.forEach(btn => btn.disabled = true);
 
-    // lock + color
-    document.querySelectorAll(".opt").forEach(btn=>{
-      const i = Number(btn.dataset.i);
-      btn.disabled = true;
-      if(i===q.c) btn.classList.add("correct");
-      if(i===idx && idx!==q.c) btn.classList.add("wrong");
+    const correct = (choiceIndex === Q.c);
+
+    // mark correct + wrong
+    opts.forEach((btn, idx) => {
+      if(idx === Q.c) btn.classList.add("correct");
+      if(idx === choiceIndex && !correct) btn.classList.add("wrong");
     });
 
-    // immediate feedback + explanation ALWAYS
-    const fb = $("fb");
+    // run stats
+    state.runAnswered += 1;
+    if(correct) state.runCorrect += 1;
+    else {
+      // track wrong of the ORIGINAL 5-question lesson indices (0..4)
+      if(!state.wrongThisRun.includes(realIdx)) state.wrongThisRun.push(realIdx);
+    }
+
+    // feedback always
+    const fb = document.getElementById("fb");
+    fb.className = "feedback " + (correct ? "ok" : "bad");
     fb.innerHTML = `
-      <div class="feedback ${correct ? "ok":"bad"}">
-        <div style="font-weight:900; margin-bottom:6px;">
-          ${correct ? "✅ GIUSTO" : "❌ SBAGLIATO"}
+      <strong>${correct ? "✅ GIUSTO" : "❌ SBAGLIATO"}</strong><br>
+      <strong>Spiegazione:</strong> ${escapeHtml(Q.ex)}
+    `;
+    fb.classList.remove("hidden");
+
+    el("nextBtn").disabled = false;
+  }
+
+  function finalizeLessonRun(){
+    const li = state.lessonIndex;
+    const s = save.perLesson[li];
+
+    // Save last run
+    s.lastCorrect = state.runCorrect;
+    s.lastAnswered = state.runAnswered;
+    // Save wrong from last run (store 0..4 indices)
+    s.wrongLast = state.wrongThisRun.slice().sort((a,b)=>a-b);
+
+    // Update best for lesson ONLY if it was a full 5-question run (not retryWrong)
+    if(!state.retryWrong && state.runAnswered === 5){
+      if(state.runCorrect > s.bestCorrect){
+        s.bestCorrect = state.runCorrect;
+        s.bestAnswered = 5;
+      }
+      // Mark completed if score >= 4/5 (you can change threshold)
+      if(state.runCorrect >= 4) s.completed = true;
+    }
+
+    // Update totals best across all lessons: compute from lesson bests
+    // totals.bestCorrect = sum of bestCorrect; bestAnswered = lessons*5
+    save.totals.bestAnswered = lessons.length * 5;
+    save.totals.bestCorrect = save.perLesson.reduce((acc, x) => acc + (Number(x.bestCorrect)||0), 0);
+
+    saveNow();
+  }
+
+  function renderLessonEnd(){
+    setNav(true);
+    finalizeLessonRun();
+
+    const L = lessons[state.lessonIndex];
+    const s = save.perLesson[state.lessonIndex];
+    const lastPct = s.lastAnswered ? Math.round((s.lastCorrect/s.lastAnswered)*100) : 0;
+    const bestPct = s.bestAnswered ? Math.round((s.bestCorrect/s.bestAnswered)*100) : 0;
+
+    const wrongCount = (s.wrongLast || []).length;
+
+    let badge = "Da rinforzare 💪";
+    if(lastPct >= 90) badge = "Ottimo 🔥";
+    else if(lastPct >= 70) badge = "Buono ✅";
+
+    const wrongLine = wrongCount > 0
+      ? `Hai sbagliato ${wrongCount} domanda/e.`
+      : `Nessun errore: perfetto!`;
+
+    const retryBtn = wrongCount > 0
+      ? `<button class="navBtn primary" onclick="retryWrong()">Rifai sbagliate 🔁</button>`
+      : `<button class="navBtn primary" onclick="nextLessonOrFinal()">${state.lessonIndex === lessons.length-1 ? "Vai al finale 🏁" : "Prossima lezione ➡️"}</button>`;
+
+    const otherBtn = wrongCount > 0
+      ? `<button class="navBtn" onclick="nextLessonOrFinal()">${state.lessonIndex === lessons.length-1 ? "Salta e vai al finale 🏁" : "Prossima lezione ➡️"}</button>`
+      : `<button class="navBtn" onclick="goHome()">Torna alla Home 🏠</button>`;
+
+    el("card").innerHTML = `
+      <h2>Fine lezione</h2>
+      <p class="kicker">${escapeHtml(L.title)} — ${badge}</p>
+
+      <div class="theoryBox">
+        <div class="mono" style="white-space:normal;">
+          <strong>Ultimo punteggio:</strong> ${s.lastCorrect}/${s.lastAnswered} (${lastPct}%)
+          <br>
+          <strong>Record lezione:</strong> ${s.bestCorrect}/${s.bestAnswered} (${bestPct}%)
+          <br>
+          <strong>Stato:</strong> ${s.completed ? "✅ Completata" : "🕒 Da fare"}
+          <br>
+          <strong>Errori:</strong> ${wrongLine}
         </div>
-        <div><span class="hl">Spiegazione:</span> <span class="muted">${q.ex}</span></div>
+      </div>
+
+      <div class="rowBtns">
+        ${retryBtn}
+        ${otherBtn}
+      </div>
+
+      <div class="rowBtns">
+        <button class="navBtn" onclick="restartLesson()">Rifai tutta la lezione ↩️</button>
+        <button class="navBtn" onclick="goHome()">Home 🏠</button>
+      </div>
+
+      <div class="small">
+        Consiglio pratico: se hai fatto 3/5 o meno, rifai “Rifai sbagliate” e poi “Rifai tutta la lezione”.
       </div>
     `;
 
-    $("nextBtn").disabled = false;
-    updateDash(); updateBar();
+    el("backBtn").disabled = true;
+    el("nextBtn").disabled = true;
+    el("note").textContent = "Qui scegli cosa fare: rifare sbagliate, passare oltre o tornare alla Home.";
+    updateLastPosition();
   }
 
-  function renderResults(){
-    const total = quiz.length;
-    const perc = pct(state.score, total);
-    $("title").textContent = "Risultati";
-    $("kicker").textContent = "Hai finito il quiz.";
+  function retryWrong(){
+    const li = state.lessonIndex;
+    const wrong = (save.perLesson[li].wrongLast || []).slice();
+    state.retryWrong = true;
+    state.wrongQueue = wrong;
+    state.mode = "quiz";
+    state.questionIndex = 0;
+    resetRunStats();
+    render();
+  }
 
-    $("content").innerHTML = `
-      <div class="box">
-        <p style="margin:0; font-weight:900; font-size:18px;">
-          Punteggio: <span class="hl">${state.score}</span> / ${total} (${perc}%)
-        </p>
-        <p class="muted" style="margin:8px 0 0;">Errori: <span class="hl">${state.mistakes}</span></p>
+  function restartLesson(){
+    state.retryWrong = false;
+    state.wrongQueue = [];
+    state.mode = "theory";
+    state.questionIndex = 0;
+    resetRunStats();
+    render();
+  }
+
+  function nextLessonOrFinal(){
+    if(state.lessonIndex < lessons.length - 1){
+      state.lessonIndex += 1;
+      state.retryWrong = false;
+      state.wrongQueue = [];
+      state.mode = "theory";
+      state.questionIndex = 0;
+      resetRunStats();
+      render();
+    } else {
+      state.mode = "final";
+      renderFinal();
+    }
+  }
+
+  function goHome(){
+    state.mode = "home";
+    state.retryWrong = false;
+    state.wrongQueue = [];
+    resetRunStats();
+    render();
+  }
+
+  // ==========================================================
+  // FINALE (riepilogo semplice)
+  // ==========================================================
+  function renderFinal(){
+    setNav(false);
+
+    const bestTotalPct = save.totals.bestAnswered ? Math.round((save.totals.bestCorrect/save.totals.bestAnswered)*100) : 0;
+    const completed = save.perLesson.filter(x => x.completed).length;
+
+    const breakdown = lessons.map((L, i) => {
+      const s = save.perLesson[i];
+      const bestPct = s.bestAnswered ? Math.round((s.bestCorrect/s.bestAnswered)*100) : 0;
+      const lastPct = s.lastAnswered ? Math.round((s.lastCorrect/s.lastAnswered)*100) : 0;
+      const tag = s.completed ? "✅" : "🕒";
+      const wrongCount = (s.wrongLast || []).length;
+      const hint = (!s.completed && wrongCount > 0) ? ` — Rifai sbagliate (${wrongCount})` : "";
+      return `
+        <button class="lessonBtn" onclick="startLesson(${i})">
+          <div class="lessonTop">
+            <div class="lessonName">${tag} ${escapeHtml(L.title)}</div>
+            <div class="tag">Best ${bestPct}%</div>
+          </div>
+          <div class="lessonMeta">Ultima: ${s.lastAnswered ? `${s.lastCorrect}/${s.lastAnswered} (${lastPct}%)` : "—"}${escapeHtml(hint)}</div>
+        </button>
+      `;
+    }).join("");
+
+    el("card").innerHTML = `
+      <h2>Riepilogo</h2>
+      <p class="kicker">Qui vedi cosa ripassare. Tocca una lezione per rientrare.</p>
+
+      <div class="theoryBox">
+        <div class="mono" style="white-space:normal;">
+          <strong>Totale migliore:</strong> ${save.totals.bestCorrect}/${save.totals.bestAnswered} (${bestTotalPct}%)
+          <br>
+          <strong>Lezioni completate:</strong> ${completed}/${lessons.length}
+        </div>
       </div>
+
+      <div class="rowBtns">
+        <button class="navBtn primary" onclick="goHome()">Home 🏠</button>
+        <button class="navBtn danger" onclick="confirmReset()">Reset progresso</button>
+      </div>
+
+      <div class="list">${breakdown}</div>
     `;
 
-    $("prevBtn").disabled = true;
-    $("nextBtn").disabled = true;
-    $("jumpQuizBtn").disabled = false;
+    el("note").textContent = "Suggerimento: entra nelle lezioni non completate e usa “Rifai sbagliate”.";
+    updateLastPosition();
   }
 
+  // ==========================================================
+  // ROUTER / NAV BUTTONS
+  // ==========================================================
   function render(){
-    setModePill(); updateDash(); updateBar();
-    if(state.mode==="theory") renderTheory();
-    else if(state.mode==="quiz") renderQuiz();
-    else renderResults();
+    setTopUI();
+    if(state.mode === "home") renderHome();
+    else if(state.mode === "theory") renderTheory();
+    else if(state.mode === "quiz") renderQuiz();
+    else if(state.mode === "lesson_end") renderLessonEnd();
+    else renderFinal();
   }
 
-  function prev(){
-    if(state.mode==="theory"){
-      if(state.ti>0) state.ti--;
-    } else if(state.mode==="quiz"){
-      if(state.qi>0){
-        state.qi--;
-        state.answered=false;
-      }
-    }
-    render();
+  function goBack(){
+    // Back is kept super-simple for mobile:
+    // - from theory: go home
+    // - from quiz: disabled (avoid confusion)
+    // - from lesson_end: home
+    // - from final: home
+    if(state.mode === "theory") goHome();
+    else if(state.mode === "lesson_end") goHome();
+    else if(state.mode === "final") goHome();
   }
-  function next(){
-    if(state.mode==="theory"){
-      if(state.ti<theory.length-1) state.ti++;
-      else startQuiz();
-    } else if(state.mode==="quiz"){
-      if(!state.answered) return; // sicurezza
-      if(state.qi<quiz.length-1){
-        state.qi++;
-        state.answered=false;
+
+  function goNext(){
+    if(state.mode === "theory"){
+      state.mode = "quiz";
+      state.questionIndex = 0;
+      state.retryWrong = false;
+      state.wrongQueue = [];
+      resetRunStats();
+      render();
+      return;
+    }
+
+    if(state.mode === "quiz"){
+      // locked until answered
+      if(!state.answered) return;
+
+      // advance within current quiz set
+      const totalQs = state.retryWrong ? state.currentQuizIndices.length : 5;
+      if(state.questionIndex < totalQs - 1){
+        state.questionIndex += 1;
+        render();
       } else {
-        state.mode="results";
+        state.mode = "lesson_end";
+        render();
       }
+      return;
     }
-    render();
-  }
-  function startQuiz(){
-    state.mode="quiz";
-    state.qi=0;
-    state.score=0;
-    state.mistakes=0;
-    state.answered=false;
-  }
-  function resetAll(){
-    state.mode="theory";
-    state.ti=0;
-    state.qi=0;
-    state.score=0;
-    state.mistakes=0;
-    state.answered=false;
-    render();
+
+    if(state.mode === "home"){
+      continueLast();
+      return;
+    }
+
+    if(state.mode === "lesson_end"){
+      nextLessonOrFinal();
+      return;
+    }
   }
 
-  // bind buttons
-  $("prevBtn").addEventListener("click", prev);
-  $("nextBtn").addEventListener("click", next);
-  $("jumpQuizBtn").addEventListener("click", ()=>{ startQuiz(); render(); });
-  $("resetBtn").addEventListener("click", resetAll);
+  // Buttons
+  el("backBtn").addEventListener("click", goBack);
+  el("nextBtn").addEventListener("click", goNext);
 
+  // First render
   render();
 </script>
 </body>
